@@ -9,18 +9,18 @@ def get_filtered_df(df, selected_region):
         filtered_df = df.copy()
     else:
         filtered_df = df[df['SR_Name_Eng'] == selected_region] if selected_region else df
-    filtered_df = filtered_df[~filtered_df['Deceased'].isna()]
+    filtered_df = filtered_df[~filtered_df['Victims'].isna()]
     return filtered_df
 
 def create_deceased_bar_chart(filtered_df):
     """Creates a bar chart for the number of deceased by township."""
     fig = px.bar(
-        filtered_df.groupby('Township_Name_Eng')['Deceased'].count().reset_index(),
+        filtered_df.groupby('Township_Name_Eng')['Victims'].count().reset_index(),
         x='Township_Name_Eng',
-        y='Deceased',
-        color='Deceased',
+        y='Victims',
+        color='Victims',
         title='Number of Deceased by Townships as of March 28',
-        labels={'Deceased': 'Number of Deceased as of March 28', 'Township_Name_Eng': 'Name of Township'}
+        labels={'Victims': 'Number of Deceased as of March 28', 'Township_Name_Eng': 'Name of Township'}
     )
     fig.update_layout(
         height=600,
@@ -32,7 +32,7 @@ def create_impact_map(filtered_df):
     """Creates a scatter map showing earthquake impact."""
     fig = px.scatter_map(
         filtered_df.groupby('Township_Name_Eng').agg(
-            Deceased_sum=('Deceased', 'count'),
+            Deceased_sum=('Victims', 'count'),
             Latitude_avg=('Latitude', 'mean'),
             Longitude_avg=('Longitude', 'mean')).reset_index(),
         lat='Latitude_avg',
